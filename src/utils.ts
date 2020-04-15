@@ -13,7 +13,7 @@ export function getImportRegExp(key: string): RegExp {
   const file = "(.+\\.\\S{1,2}ss)";
   const fromOrRequire = "(?:from\\s+|=\\s+require(?:<any>)?\\()";
   const requireEndOptional = "\\)?";
-  const pattern = `${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
+  const pattern = `\\s+${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
 
   return new RegExp(pattern);
 }

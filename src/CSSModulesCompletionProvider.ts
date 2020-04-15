@@ -1,5 +1,5 @@
 import { CompletionItemProvider, workspace, ExtensionContext } from "coc.nvim";
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import lodashCamelCase from "lodash.camelcase";
 import { CompletionItem } from "vscode-languageserver-protocol";
 import { Position, TextDocument } from "vscode-languageserver-textdocument";
@@ -98,7 +98,7 @@ export default class CSSModulesCompletionProvider
     }
 
     const importPath = getImportPath(document, importName);
-    if (!importPath) {
+    if (!importPath || !existsSync(importPath)) {
       return [];
     }
 

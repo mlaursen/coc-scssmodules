@@ -1,5 +1,5 @@
 import { DefinitionProvider, Uri, workspace, ExtensionContext } from "coc.nvim";
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import os from "os";
 import { resolve } from "path";
 import {
@@ -153,7 +153,7 @@ export default class CSSModulesDefinitionProvider
 
     const [stylesObject, className] = this.getParts(line, position);
     const importPath = getImportPath(document, stylesObject);
-    if (!importPath) {
+    if (!importPath || !existsSync(importPath)) {
       return null;
     }
 
