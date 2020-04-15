@@ -1,4 +1,4 @@
-import { CompletionItemProvider, workspace } from "coc.nvim";
+import { CompletionItemProvider, workspace, ExtensionContext } from "coc.nvim";
 import { readFileSync } from "fs";
 import lodashCamelCase from "lodash.camelcase";
 import { CompletionItem } from "vscode-languageserver-protocol";
@@ -11,8 +11,12 @@ type ClassNameTransformer = (className: string) => string;
 export default class CSSModulesCompletionProvider
   implements CompletionItemProvider {
   private transformer: ClassNameTransformer;
+  private logger: ExtensionContext["logger"];
 
-  constructor(camelCase: CamelCaseValues) {
+  public constructor(
+    camelCase: CamelCaseValues,
+    logger: ExtensionContext["logger"]
+  ) {
     switch (camelCase) {
       case true:
         this.transformer = lodashCamelCase;
@@ -24,6 +28,7 @@ export default class CSSModulesCompletionProvider
       default:
         this.transformer = (s) => s;
     }
+    this.logger = logger;
   }
 
   private isCompletionTrigger(line: string, position: Position): boolean {

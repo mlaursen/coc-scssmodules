@@ -30,7 +30,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     languages.registerDefinitionProvider(
       filters,
-      new CSSModulesDefinitionProvider(camelCase)
+      new CSSModulesDefinitionProvider(camelCase, context.logger)
     )
   );
   subscriptions.push(
@@ -38,7 +38,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       "coc-cssmodules",
       hintMessage,
       VIM_FILETYPES,
-      new CSSModulesCompletionProvider(camelCase),
+      new CSSModulesCompletionProvider(camelCase, context.logger),
       ["."]
     )
   );

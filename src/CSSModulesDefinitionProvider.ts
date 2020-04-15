@@ -1,4 +1,4 @@
-import { DefinitionProvider, Uri, workspace } from "coc.nvim";
+import { DefinitionProvider, Uri, workspace, ExtensionContext } from "coc.nvim";
 import { readFileSync } from "fs";
 import os from "os";
 import { resolve } from "path";
@@ -16,9 +16,14 @@ import { getDirname, getImportPath, getImportRegExp } from "./utils";
 export default class CSSModulesDefinitionProvider
   implements DefinitionProvider {
   private camelCase: CamelCaseValues;
+  private logger: ExtensionContext["logger"];
 
-  constructor(camelCase: CamelCaseValues) {
+  public constructor(
+    camelCase: CamelCaseValues,
+    logger: ExtensionContext["logger"]
+  ) {
     this.camelCase = camelCase;
+    this.logger = logger;
   }
 
   /**
