@@ -16,9 +16,11 @@ export default class CSSModulesCompletionProvider
     switch (camelCase) {
       case true:
         this.transformer = lodashCamelCase;
+        break;
       case "dashes":
         this.transformer = (s) =>
           s.replace(/-(\w)/g, (_, firstLetter) => firstLetter.toUpperCase());
+        break;
       default:
         this.transformer = (s) => s;
     }
