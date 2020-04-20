@@ -1,19 +1,23 @@
-# coc-cssmodules
+# coc-scssmodules
 
 [coc.nvim] extension for `autocompletion` and `go-to-definition` functionality
 for [CSS Modules].
 
+Note: The `go-to-definition` functionality is still a bit iffy especially with
+parent selectors. This really just works with single word selectors at this
+time.
+
 ## Installation
 
-Since this is really just something I wanted to try making to learn how to make
-extensions for `coc.nvim`, this won't really be published like the real
-`coc.nvim` extensions and will only be supported through [vim's plugin manager
-for coc-extensions]
+```vim
+:CocInstall coc-scssmodules
+```
 
-With [vim-plug]:
+If you are using [vim's plugin manager for coc-extensions], here's an example
+with [vim-plug]:
 
 ```vim
-Plug 'mlaursen/coc-cssmodules', {'do': 'yarn install'}
+Plug 'mlaursen/coc-scssmodules', {'do': 'yarn install && yarn build'}
 ```
 
 ## Configuration

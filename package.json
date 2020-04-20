@@ -1,12 +1,16 @@
 {
-  "name": "coc-cssmodules",
-  "version": "1.0.0",
+  "name": "coc-scssmodules",
+  "version": "0.1.0",
   "description": "css and scss modules autocompletion and go-to-definition coc.nvim plugin and hopefully supporting sass parent selectors",
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc",
-    "prepare": "npm run build"
+    "format-md": "prettier --write \"*.md\"",
+    "format-src": "prettier --write \"src/**/*.{md,ts,tsx}\"",
+    "tag-version": "git tag -a v$npm_package_version -m 'v$npm_package_version';git push --tags",
+    "format": "npm-run-all format-md format-src",
+    "prepublishOnly": "npm-run-all build tag-version",
+    "build": "tsc"
   },
   "repository": "https://github.com/mlaursen/coc-cssmodules",
   "author": "Mikkel Laursen <mlaursen03@gmail.com>",
@@ -14,6 +18,7 @@
   "keywords": [
     "coc.nvim",
     "css-modules",
+    "cssmodules",
     "sass parent selectors",
     "scss parent selectors"
   ],
@@ -33,6 +38,7 @@
     "@types/lodash.camelcase": "^4.3.6",
     "@types/node": "^13.11.1",
     "@types/react": "^16.9.34",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.0.4",
     "rimraf": "^3.0.2",
     "typescript": "^3.8.3"
@@ -42,8 +48,15 @@
       "type": "object",
       "properties": {
         "cssmodules.camelCase": {
-          "type": ["boolean", "string"],
-          "enum": [true, false, "dashes"],
+          "type": [
+            "boolean",
+            "string"
+          ],
+          "enum": [
+            true,
+            false,
+            "dashes"
+          ],
           "default": false,
           "description": "Boolean if the suggestions should be converted to camelCase if you use kebab-case in css files. Should also work with sass parent selectors"
         },
