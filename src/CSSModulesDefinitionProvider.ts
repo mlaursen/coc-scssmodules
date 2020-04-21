@@ -52,13 +52,14 @@ export default class CSSModulesDefinitionProvider
       return false;
     }
 
-    const importNameIndex = line.indexOf(importName) + 1;
-    const fileNameIndex = line.indexOf(fileName) + 1;
+    const importNameIndex = line.indexOf(importName);
+    const fileNameIndex = line.indexOf(fileName);
 
     return (
-      (character > importNameIndex &&
-        character < importNameIndex + importName.length) ||
-      (character > fileNameIndex && character < fileNameIndex + fileName.length)
+      (character >= importNameIndex &&
+        character <= importNameIndex + importName.length) ||
+      (character >= fileNameIndex &&
+        character <= fileNameIndex + fileName.length)
     );
   }
 
@@ -94,24 +95,138 @@ export default class CSSModulesDefinitionProvider
     return [importName, className];
   }
 
+  /**
+   * Creates a regexp string that makes all the parent selectors optional. This
+   * should be used with the camelCase option.
+   *
+   * Example:
+   *
+   * // so this should match:
+   * // .container-child, &-child, &_child, &--child, &__child
+   * "containerChild" -> "(container|&)(-|_){1,2}Child"
+   *
+   * // so this should match:
+   * // .container-child-element,
+   * // &-child-element
+   * // &_child-element
+   * // &--child-element
+   * // &__child-element
+   * // &-element
+   * // &_element
+   * // &--element
+   * // &__element
+   * "containerChildElement" -> "((container|&)(-|_){1,2})?(Child|&)(-|_){1,2}Element"
+   *
+   * but... it's best practice to not really do this much nesting so don't
+   * really even know if this works 100%
+   */
+  private optionalSelectorPrefix(
+    [className, ...remaining]: string[],
+    currentRegex: string
+  ): string {
+    if (!remaining.length) {
+      return `${currentRegex}${className}`;
+    }
+
+    let prefix = currentRegex;
+    if (currentRegex) {
+      prefix = `(${currentRegex})?`;
+    }
+
+    return this.optionalSelectorPrefix(
+      remaining,
+      `${prefix}(${className}|&)(-|_){1,2}`
+    );
+  }
+
+  /**
+   * This is really only used for hyphenated bem camelCase configuration. This
+   * ensures that if there is a child selector with the same name as a "root"
+   * selector later in the file, the "root" selector will be chosen instead.
+   *
+   * Example:
+   *
+   * ```scss
+   * .container {
+   *   &--clear {
+   *     background-color: transparent;
+   *   }
+   *
+   *   &--red {
+   *     background-color: red;
+   *   }
+   * }
+   *
+   * .clear {
+   *   clear: both;
+   * }
+   *
+   * .red, .red-fg, .red-thing {
+   *   color: red;
+   * }
+   * ```
+   *
+   * ```tsx
+   * // want this to match .clear instead of &--clear
+   * styles.clear
+   *
+   * // want this to match .red instead of &--red
+   * styles.red
+   * ```
+   */
+  private isNotBestSelectorMatch(
+    remainingLines: string[],
+    className: string
+  ): boolean {
+    if (!this.camelCase) {
+      return false;
+    }
+
+    const lineStartsWithClassName = new RegExp(
+      `^.${className}(,\\s*\.[A-z_-]+)*\\s*({|,)\\s*$`
+    );
+
+    return !!remainingLines.find((line) => line.match(lineStartsWithClassName));
+  }
+
+  /**
+   * Find the position of the classname within the css/scss module file by
+   * expanding camel case for parent selectors (if camelCase is enabled).
+   */
   private getPosition(importPath: string, className: string): Position | null {
     const contents = readFileSync(importPath, "utf8");
     const lines = contents.split(os.EOL);
-    let name = className;
+    let nameOrRegexpString = className;
     if (this.camelCase && /^[a-z]+[A-Z]/.test(className)) {
-      name = className.replace(/^[a-z]+/, "");
+      const parts = className.split(/(?=[A-Z][a-z])/);
+      nameOrRegexpString = this.optionalSelectorPrefix(parts, "");
     }
-    const keyword = new RegExp(name.split("").join("\\S*"), "i");
+
+    const keyword = new RegExp(nameOrRegexpString, "i");
 
     for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
       const line = lines[lineNumber];
-      const matches = line.match(/(\.|&)[A-z][A-z0-9-_]+/g) || [];
-      if (!matches.length) {
+
+      // match either:
+      // .className
+      // .class-name
+      // .className-oh_why_wouldYoudoThis
+      //   &-class
+      //   &--modifier
+      //   &__child
+      const matches = line.match(
+        /^(\.[A-z])|(\s*&[-_]+)[A-z0-9_-]+\s*(,|{)\s*$/
+      );
+
+      if (!matches || !matches.length) {
         continue;
       }
 
       const lineMatches = line.match(keyword);
-      if (!lineMatches) {
+      if (
+        !lineMatches ||
+        this.isNotBestSelectorMatch(lines.slice(lineNumber + 1), className)
+      ) {
         continue;
       }
 
@@ -151,6 +266,7 @@ export default class CSSModulesDefinitionProvider
       return Location.create(filePath, range);
     }
 
+    // next check if we can find an import name based on the styles object
     const [stylesObject, className] = this.getParts(line, position);
     const importPath = getImportPath(document, stylesObject);
     if (!importPath || !existsSync(importPath)) {
