@@ -60,6 +60,12 @@ Finally, there is another configuration setting that can be used to show hint
 details when the autocompletion items if you do not like the default value of
 `string (cssmodule)`.
 
+## TODO
+
+Need to look into a way to actually write tests for this. None of the other
+`coc-*` extensions have tests right now, so nothing really to reference. I could
+write some tests for the utils and regexp at least.
+
 [coc.nvim]: https://github.com/neoclide/coc.nvim
 [css modules]: https://github.com/css-modules/css-modules
 [vim's plugin manager for coc-extensions]:

@@ -1,0 +1,27 @@
+.container {
+  background-color: red;
+
+  &-child {
+    width: 100%;
+  }
+
+  &__child {
+    width: 100%;
+  }
+
+  &--clear {
+    background-color: transparent;
+  }
+}
+
+.container-clear {
+  background-color: transparent;
+}
+
+.clear, .clearfix, .clear-other {
+  clear: both;
+}
+
+.something-amazing {
+  font-size: 1rem;
+}

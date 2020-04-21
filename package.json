@@ -10,7 +10,7 @@
     "tag-version": "git tag -a v$npm_package_version -m 'v$npm_package_version';git push --tags",
     "format": "npm-run-all format-md format-src",
     "prepublishOnly": "npm-run-all build tag-version",
-    "build": "tsc"
+    "build": "tsc -p tsconfig.build.json"
   },
   "repository": "https://github.com/mlaursen/coc-scssmodules",
   "author": "Mikkel Laursen <mlaursen03@gmail.com>",

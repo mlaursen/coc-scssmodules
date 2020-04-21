@@ -1,0 +1,15 @@
+.container {
+  background-color: red;
+}
+
+.clear {
+  clear: both;
+}
+
+.somethingAmazing {
+  font-size: 1rem;
+}
+
+.containerChild {
+  width: 100%;
+}
