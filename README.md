@@ -3,6 +3,8 @@
 [coc.nvim] extension for `autocompletion` and `go-to-definition` functionality
 for [CSS Modules].
 
+![Example showcasing autocompletion and go-to-defintion](./example.gif)
+
 Note: If you have `coc-tsserver` installed, the `go-to-defininition` might show
 a popup instead linking to type definition for `*.module.s?css` instead. You'll
 just need to select the `.css` file for this case since I don't know how to fix
