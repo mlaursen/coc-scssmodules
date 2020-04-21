@@ -1,9 +1,9 @@
 import { ExtensionContext, languages, workspace } from "coc.nvim";
 import { DocumentFilter } from "vscode-languageserver-protocol";
 
-import CSSModulesDefinitionProvider from "./CSSModulesDefinitionProvider";
+import DefinitionProvider from "./DefinitionProvider";
 import { CamelCaseValues } from "./types";
-import CSSModulesCompletionProvider from "./CSSModulesCompletionProvider";
+import CompletionProvider from "./CompletionProvider";
 
 const VIM_FILETYPES = [
   "javascript",
@@ -30,7 +30,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   subscriptions.push(
     languages.registerDefinitionProvider(
       filters,
-      new CSSModulesDefinitionProvider(camelCase, context.logger)
+      new DefinitionProvider(camelCase, context.logger)
     )
   );
   subscriptions.push(
@@ -38,7 +38,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       "coc-cssmodules",
       hintMessage,
       VIM_FILETYPES,
-      new CSSModulesCompletionProvider(camelCase, context.logger),
+      new CompletionProvider(camelCase, context.logger),
       ["."]
     )
   );

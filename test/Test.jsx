@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React from "react";
 
 import styles from "./HyphenatedBEM.module.scss";
 
-const Test: FC = () => (
+const Test = () => (
   <div className={styles.container}>
     <div className={styles.clear}>Hello, world!</div>
   </div>

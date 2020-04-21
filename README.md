@@ -3,9 +3,10 @@
 [coc.nvim] extension for `autocompletion` and `go-to-definition` functionality
 for [CSS Modules].
 
-Note: The `go-to-definition` functionality is still a bit iffy especially with
-parent selectors. This really just works with single word selectors at this
-time.
+Note: If you have `coc-tsserver` installed, the `go-to-defininition` might show
+a popup instead linking to type definition for `*.module.s?css` instead. You'll
+just need to select the `.css` file for this case since I don't know how to fix
+it.
 
 ## Installation
 
@@ -65,6 +66,28 @@ details when the autocompletion items if you do not like the default value of
 Need to look into a way to actually write tests for this. None of the other
 `coc-*` extensions have tests right now, so nothing really to reference. I could
 write some tests for the utils and regexp at least.
+
+Look into overriding/changing the `coc-tsserver` plugin for go-to-definitions so
+this one is the "default" so it doesn't require a selection.
+
+## Developing
+
+Since I don't know a way to write automated tests yet with `coc.nvim`, the best
+way to do this is:
+
+- start the build watcher with `yarn build -w`
+- update your `.vimrc` to disable/remove the downloaded `coc-scssmodules` and
+  use a local path with something like [vim-plug] to open up one of the test
+  files within the [test](./test)
+  ```vim
+  Plug '~/path/to/this-repo'
+  ```
+- open up one of the test files in [test](./test)
+- open up the log with `:CocOpenLog`
+- use the provided `this.logger` to log with `this.logger.info`
+- whenever you make a change, run `:CocRestart` and `:CocOpenLog` to see changes
+
+It's pretty ugly.
 
 [coc.nvim]: https://github.com/neoclide/coc.nvim
 [css modules]: https://github.com/css-modules/css-modules
