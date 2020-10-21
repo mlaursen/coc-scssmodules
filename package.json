@@ -9,6 +9,7 @@
     "format-src": "prettier --write \"src/**/*.{md,ts,tsx}\"",
     "tag-version": "standard-version",
     "format": "npm-run-all format-md format-src",
+    "release": "npm publish && git push --follow-tags origin main",
     "prepublishOnly": "npm-run-all build tag-version",
     "build": "tsc -p tsconfig.build.json"
   },
