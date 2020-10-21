@@ -1,12 +1,7 @@
 printWidth: 80
 trailingComma: es5
+proseWrap: always
 overrides:
-  - files: "*.js"
+  - files: "*.{js.scss}"
     options:
       singleQuote: true
-  - files: "*.scss"
-    options:
-      singleQuote: true
-  - files: "*.md"
-    options:
-      proseWrap: always
