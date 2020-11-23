@@ -1,3 +1,9 @@
+## Deprecation Notice
+
+[coc-cssmodules@v1.1.0](https://github.com/antonk52/coc-cssmodules/releases/tag/v1.1.0)
+has implemented support for parent selectors so this extension is no longer
+required. It is recommended to use `coc-cssmodules` instead going forward.
+
 # coc-scssmodules
 
 [coc.nvim] extension for `autocompletion` and `go-to-definition` functionality
@@ -48,7 +54,7 @@ This extension supports two configuration properties:
 This extension is essentially a port of [vscode-css-modules-plugin] and
 [coc-cssmodules].
 
-## Differences with [coc-cssmodules]
+## Differences with [coc-cssmodules] (before v1.1.0)
 
 The main reason I created this implementation was to support [parent selectors]
 within scss since I still like [BEM] for describing different states. If parent
